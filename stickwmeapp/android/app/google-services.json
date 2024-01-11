@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "412965464497",
+    "project_id": "stickywithme-4b30a",
+    "storage_bucket": "stickywithme-4b30a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412965464497:android:1d39ff1a12c70928027590",
+        "android_client_info": {
+          "package_name": "com.example.stickwmeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiAex_7D0XX5VUqMQ-4Aiqv_txx7KEnRA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
