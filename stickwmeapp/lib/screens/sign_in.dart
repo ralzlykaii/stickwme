@@ -87,6 +87,7 @@ class _SignInState extends State<SignIn> {
   Widget buildTextBox(String label, String fontFamily, int borderColor, {bool isPassword = false, TextEditingController? controller}) {
     return TextField(
       obscureText: isPassword && !_showPassword,
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
@@ -134,11 +135,12 @@ class _SignInState extends State<SignIn> {
         return;
       }
 
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      try{
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-
+      
       print('User signed in: ${userCredential.user?.uid}');
 
       Navigator.of(context).pushReplacement(
@@ -146,5 +148,13 @@ class _SignInState extends State<SignIn> {
           builder: (context) => MyHomePage(title: 'Sticky with Me!'),
         ),
       );
-  }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login error. Try again.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  } 
 }
