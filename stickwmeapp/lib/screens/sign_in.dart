@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stickwmeapp/main.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,6 +13,9 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   bool _rememberMe = false;
   bool _showPassword = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +27,12 @@ class _SignInState extends State<SignIn> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               //emailtextbox
-              buildTextBox('Email', 'BetterTogether', 0xFFDECADF),
+              buildTextBox('Email', 'BetterTogether', 0xFFDECADF, controller: _emailController),
 
               SizedBox(height: 16.0), //adjust the space between email and password fields
 
               //password textbox
-              buildTextBox('Password', 'BetterTogether', 0xFFDECADF, isPassword: true),
+              buildTextBox('Password', 'BetterTogether', 0xFFDECADF, isPassword: true, controller: _passwordController),
 
               SizedBox(height: 16.0), //adjust the space between password and remember me checkbox
 
@@ -57,7 +61,7 @@ class _SignInState extends State<SignIn> {
               //login Button
               ElevatedButton(
                 onPressed: () {
-                  // Implement your login logic here
+                  signIn(); //call sign in function
                 },
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
@@ -80,7 +84,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget buildTextBox(String label, String fontFamily, int borderColor, {bool isPassword = false}) {
+  Widget buildTextBox(String label, String fontFamily, int borderColor, {bool isPassword = false, TextEditingController? controller}) {
     return TextField(
       obscureText: isPassword && !_showPassword,
       decoration: InputDecoration(
@@ -101,5 +105,46 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
+  }
+
+  Future<void> signIn() async {
+    //trim and validate email
+      final String email = _emailController.text.trim();
+      if (email.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Email cannot be empty.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
+
+      //trim and validate passwords
+      final String password = _passwordController.text.trim();
+
+      if (password.isEmpty) {
+        //show a message if password is empty
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Passwords is empty.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
+
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      print('User signed in: ${userCredential.user?.uid}');
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(title: 'Sticky with Me!'),
+        ),
+      );
   }
 }
