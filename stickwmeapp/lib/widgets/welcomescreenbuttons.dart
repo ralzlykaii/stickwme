@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stickwmeapp/main.dart';
+import 'package:stickwmeapp/screens/homescreen.dart';
 import 'package:stickwmeapp/screens/registration.dart';
 import 'package:stickwmeapp/screens/sign_in.dart';
 
@@ -30,7 +30,7 @@ class WelcomeButtons extends StatelessWidget {
             _buildCircularButton(" Guest ", const Color.fromARGB(255, 127, 158, 92), () {
               Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MyHomePage(title: 'Sticky with Me!')), //navigate to home page
+            MaterialPageRoute(builder: (context) => HomeScreen()), //navigate to home page
           );
             }),
           ],

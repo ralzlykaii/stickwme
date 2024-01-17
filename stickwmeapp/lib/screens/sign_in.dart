@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stickwmeapp/main.dart';
+import 'package:stickwmeapp/screens/homescreen.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -145,7 +145,7 @@ class _SignInState extends State<SignIn> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => MyHomePage(title: 'Sticky with Me!'),
+          builder: (context) => HomeScreen(),
         ),
       );
     } catch (e) {
