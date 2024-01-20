@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stickwmeapp/widgets/custom_nav.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
 import 'dart:math';
 
@@ -12,55 +13,73 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _noteController = TextEditingController();
   List<String> _notes = [];
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       backgroundImageOpacity: 0.4,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _notes.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    color: _generateRandomColor(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        _notes[index],
-                        style: TextStyle(color: Colors.white),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _notes.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: _generateRandomColor(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            _notes[index],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
-                    ),
+                    );
+                  },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _addNote(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),
+                  padding: EdgeInsets.all(30.0),
+                ),
+                child: Text(
+                  'Add a note',
+                  style: TextStyle(
+                    fontSize: 37.0,
+                    fontFamily: 'BetterTogether',
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
                   ),
-                );
+                ),
+              ),
+              SizedBox(height: 20.0),
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: CustomNavBar(
+              selectedIndex: _selectedIndex,
+              onTabChange: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
               },
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              _addNote(context);
-            },
-            style: ElevatedButton.styleFrom(
-              shape: CircleBorder(),
-              padding: EdgeInsets.all(30.0),
-            ),
-            child: Text(
-              'Add a note',
-              style: TextStyle(
-                fontSize: 37.0,
-                fontFamily: 'BetterTogether',
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          SizedBox(height: 20.0),
         ],
       ),
     );
