@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stickwmeapp/widgets/custom_nav.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
@@ -118,6 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
   //add notes to list
   void _saveNote() {
     String note = _noteController.text;
+
+    _saveNotetoDB(note);
+
     setState(() {
       _notes.add(note);
     });
@@ -133,5 +138,28 @@ class _HomeScreenState extends State<HomeScreen> {
       random.nextInt(256),
       random.nextInt(256),
     );
+  }
+  
+ void _saveNotetoDB(String note) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser; //get the current user
+
+      if (user != null) {
+        String userId = user.uid; //extract userid
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('stickynotes')
+            .add({
+          'note': note,
+          'creation_date': FieldValue.serverTimestamp(),
+        });
+      } else {
+        print('No user signed in');
+      }
+    } catch (e) {
+      print('Error saving note: $e');
+    }
   }
 }

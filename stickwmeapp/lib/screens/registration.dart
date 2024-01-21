@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:stickwmeapp/screens/homescreen.dart';
@@ -120,11 +121,14 @@ class _RegistrationState extends State<Registration> {
         );
         return;
       }
-
+  
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      //add the user to database
+      addUserData(_emailController.text.trim());
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -155,6 +159,12 @@ class _RegistrationState extends State<Registration> {
         ),
       );
     }
+  }
+
+  Future addUserData(String email) async{
+    await FirebaseFirestore.instance.collection('users').add({
+      'email': email,
+    });
   }
 
   @override

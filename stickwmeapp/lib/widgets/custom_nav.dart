@@ -21,7 +21,7 @@ class CustomNavBar extends StatelessWidget {
       tabBorder: Border.all(color: Colors.grey, width: 1), // tab button border
       tabShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5), blurRadius: 8)], // tab button shadow
       curve: Curves.easeOutExpo, // tab animation curves
-      duration: Duration(milliseconds: 900), // tab animation duration
+      duration: Duration(milliseconds: 500), // tab animation duration
       gap: 8, // the tab button gap between icon and text 
       color: Colors.grey[800], // unselected icon color
       activeColor: Colors.purple, // selected icon and text color
