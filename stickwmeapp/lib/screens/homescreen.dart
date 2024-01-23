@@ -18,6 +18,12 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   @override
+  void initState() { 
+    super.initState(); //override initState to retreived user notes when initialized
+    _retrieveNotes();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       backgroundImageOpacity: 0.4,
@@ -146,20 +152,59 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (user != null) {
         String userId = user.uid; //extract userid
+        String? email = user.email; //extract user email
 
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
+        await FirebaseFirestore.instance // saves note and starts a collection under user doc
             .collection('stickynotes')
+            .doc(userId)
+            .collection('${email} stickynotes')
             .add({
+          'user': email,
           'note': note,
           'creation_date': FieldValue.serverTimestamp(),
         });
       } else {
-        print('No user signed in');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No one is signed in.'),
+            duration: Duration(seconds: 2),
+          )
+        );
       }
     } catch (e) {
-      print('Error saving note: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving sticky note.'),
+            duration: Duration(seconds: 2),
+          )
+        );
+    }
+  }
+  
+  void _retrieveNotes() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser; //get current user
+      if (user != null) {
+        String userId = user.uid; //extract userid  
+        String? email = user.email; //extract user email
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance //retreive note from user documents
+            .collection('stickynotes')
+            .doc(userId)
+            .collection('${email} stickynotes')
+            .get();
+
+        setState(() {
+          _notes = snapshot.docs.map((doc) => doc['note'] as String).toList(); //update screen with retreived notes from user doc
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Retreiving notes failed.'),
+            duration: Duration(seconds: 2),
+          )
+        );
     }
   }
 }
