@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:stickwmeapp/screens/homescreen.dart';
 
 class CustomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -47,7 +48,22 @@ class CustomNavBar extends StatelessWidget {
         )
       ],
       selectedIndex: selectedIndex,
-      onTabChange: onTabChange,
+      onTabChange: (index) {
+        if (onTabChange != null) {
+          //use nav bar tabs to navigate through screen using that screen index
+          switch(index) {
+            case 0:
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
+            break;
+
+            case 1: //friends screen
+
+            case 2: //profile screen
+            
+            break;
+          }
+        }
+      },
     );
   }
 }
