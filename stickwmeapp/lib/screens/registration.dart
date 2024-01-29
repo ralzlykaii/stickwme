@@ -128,7 +128,7 @@ class _RegistrationState extends State<Registration> {
       );
 
       //add the user to database
-      addUserData(_emailController.text.trim());
+      //addUserData(_emailController.text.trim());
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -161,11 +161,11 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
-  Future addUserData(String email) async{
-    await FirebaseFirestore.instance.collection('users').add({
-      'email': email,
-    });
-  }
+  //Future addUserData(String email) async{
+  //  await FirebaseFirestore.instance.collection('users').add({
+  //    'email': email,
+  //  });
+  //}
 
   @override
   void dispose() {

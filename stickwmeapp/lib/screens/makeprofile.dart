@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:stickwmeapp/screens/homescreen.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
 
 class MakeProfile extends StatefulWidget {
@@ -41,7 +44,7 @@ class _MakeProfileState extends State<MakeProfile> {
                     alignment: Alignment.center,
                     children: [
                       CircleAvatar(
-                        radius: 60,
+                        radius: 80,
                         backgroundColor: Colors.grey[300],
                         backgroundImage: _image != null ? FileImage(_image!) : null,
                         child: _image == null
@@ -82,7 +85,7 @@ class _MakeProfileState extends State<MakeProfile> {
                   },
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
-                    padding: EdgeInsets.all(30.0),
+                    padding: EdgeInsets.all(37.0),
                     primary: Color.fromARGB(255, 210, 151, 166),
                   ),
                   child: Text(
@@ -127,7 +130,31 @@ class _MakeProfileState extends State<MakeProfile> {
     );
   }
   
-  void saveProfile() {}
-  //now save all user info to database
-  //want to save under user collection
+  void saveProfile() async {
+    User? user = FirebaseAuth.instance.currentUser; //get current use
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    //get users name
+    String firstName = _firstNameController.text.trim();
+    String lastName = _lastNameController.text.trim();
+
+    String imageUrl = _image != null ? _image!.path : ""; //check if image chosen and get url
+
+    //now save all user info to database
+    //want to save under user collection
+    await firestore.collection('users').doc(user?.uid).set(
+      {
+      'email': user?.email,
+      'firstName': firstName,
+      'flastName': lastName,
+      'imageUrl': imageUrl,
+      },
+    );
+
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+    );
+  }
 }
