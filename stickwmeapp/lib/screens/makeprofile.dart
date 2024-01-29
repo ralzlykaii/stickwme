@@ -73,6 +73,28 @@ class _MakeProfileState extends State<MakeProfile> {
                 buildTextBox('First Name', 'BetterTogether', 0xFFDECADF, controller: _firstNameController),
                 SizedBox(height: 20),
                 buildTextBox('Last Name', 'BetterTogether', 0xFFDECADF, controller: _lastNameController),
+
+                SizedBox(height: 20.0),
+                //button to save profile
+                ElevatedButton(
+                  onPressed: () {
+                    saveProfile();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: CircleBorder(),
+                    padding: EdgeInsets.all(30.0),
+                    primary: Color.fromARGB(255, 210, 151, 166),
+                  ),
+                  child: Text(
+                  'Continue',
+                  style: TextStyle(
+                    fontSize: 37.0,
+                    fontFamily: 'BetterTogether',
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                ),
               ],
             ),
           ],
@@ -104,4 +126,8 @@ class _MakeProfileState extends State<MakeProfile> {
       ),
     );
   }
+  
+  void saveProfile() {}
+  //now save all user info to database
+  //want to save under user collection
 }
