@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:stickwmeapp/screens/makeprofile.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';

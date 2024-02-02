@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:stickwmeapp/screens/homescreen.dart';
 
 class CustomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -13,57 +12,41 @@ class CustomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GNav(
-      rippleColor: Color.fromARGB(255, 162, 134, 228), // tab button ripple color when pressed
-      hoverColor: Colors.grey, // tab button hover color
-      haptic: true, // haptic feedback
-      tabBorderRadius: 15,
-      tabActiveBorder: Border.all(color: Colors.black, width: 1), // tab button border
-      tabBorder: Border.all(color: Colors.grey, width: 1), // tab button border
-      tabShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5), blurRadius: 8)], // tab button shadow
-      curve: Curves.easeOutExpo, // tab animation curves
-      duration: Duration(milliseconds: 500), // tab animation duration
-      gap: 8, // the tab button gap between icon and text 
-      color: Colors.grey[800], // unselected icon color
-      activeColor: Colors.purple, // selected icon and text color
-      iconSize: 24, // tab button icon size
-      tabBackgroundColor: Colors.purple.withOpacity(0.1), // selected tab background color
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5), // navigation bar padding
-      tabs: [
-        GButton(
-          icon: Icons.home,
-          text: 'Home',
+    return Container(
+      color: Color.fromARGB(255, 170, 100, 183),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        child: GNav(
+          backgroundColor: Color.fromARGB(255, 170, 100, 183),
+          color: Colors.white, // all other tab color
+          activeColor: Colors.black, //selected tab color
+          tabBackgroundColor: Color.fromARGB(255, 213, 203, 232), //tab background color when selected
+          duration: Duration(milliseconds: 500),
+          curve: Curves.ease, // tab animation curves
+          gap: 8,
+          onTabChange: onTabChange,
+          padding: EdgeInsets.all(16),
+          selectedIndex: selectedIndex,
+          tabs: const [
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+            ),
+            GButton(
+              icon: Icons.people,
+              text: 'Friends',
+            ),
+            GButton(
+              icon: Icons.account_circle_rounded,
+              text: 'Profile',
+            ),
+            GButton(
+              icon: Icons.settings,
+              text: 'Settings',
+            )
+          ],
         ),
-        GButton(
-          icon: Icons.people,
-          text: 'Friends',
-        ),
-        GButton(
-          icon: Icons.account_circle_rounded,
-          text: 'Profile',
-        ),
-        GButton(
-          icon: Icons.settings,
-          text: 'Settings',
-        )
-      ],
-      selectedIndex: selectedIndex,
-      onTabChange: (index) {
-        if (onTabChange != null) {
-          //use nav bar tabs to navigate through screen using that screen index
-          switch(index) {
-            case 0:
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
-            break;
-
-            case 1: //friends screen
-
-            case 2: //profile screen
-            
-            break;
-          }
-        }
-      },
+      ),
     );
   }
 }

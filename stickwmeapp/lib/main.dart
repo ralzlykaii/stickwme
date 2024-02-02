@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:stickwmeapp/firebase_options.dart';
+import 'package:stickwmeapp/screens/homescreen.dart';
 import 'package:stickwmeapp/screens/makeprofile.dart';
+import 'package:stickwmeapp/screens/profilepage.dart';
 import 'package:stickwmeapp/screens/welcomescreen.dart';
 
 Future <void> main() async{
@@ -40,9 +42,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home:const Welcome(),
+      routes: {
+        'homescreen': (context) => const HomeScreen(),
+        'profilepage' :(context) => ProfilePage(),
+        //'friendspage' :(context) => ProfilePage(),
+        //'settings' :(context) => ProfilePage(),
+      },
     );
   }
 }
-
-
-
