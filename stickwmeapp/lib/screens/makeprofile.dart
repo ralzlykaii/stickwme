@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stickwmeapp/screens/homescreen.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class MakeProfile extends StatefulWidget {
   @override
@@ -138,7 +139,15 @@ class _MakeProfileState extends State<MakeProfile> {
     String firstName = _firstNameController.text.trim();
     String lastName = _lastNameController.text.trim();
 
-    String imageUrl = _image != null ? _image!.path : ""; //check if image chosen and get url
+    //now uploads image to firebase storage and obtain a download url
+    String imageUrl = "";
+    if (_image != null) {
+      Reference storageRef = FirebaseStorage.instance.ref().child('profile_image/${user?.uid}');
+      UploadTask uploadTask = storageRef.putFile(_image!);
+      await uploadTask.whenComplete(() async {
+        imageUrl = await storageRef.getDownloadURL();
+      });
+    }
 
     //now save all user info to database
     //want to save under user collection
@@ -151,10 +160,6 @@ class _MakeProfileState extends State<MakeProfile> {
       },
     );
 
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-    );
+    Navigator.pushNamed(context, 'homescreen');
   }
 }

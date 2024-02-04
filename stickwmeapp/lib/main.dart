@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       home:const Welcome(),
       routes: {
         'homescreen': (context) => const HomeScreen(),
-        'profilepage' :(context) => ProfilePage(),
+        'profilepage' :(context) => const ProfilePage(),
         //'friendspage' :(context) => ProfilePage(),
         //'settings' :(context) => ProfilePage(),
       },
