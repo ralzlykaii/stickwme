@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,8 +13,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late User _user;
-  late Map<String, dynamic> _userData;
-  File? _image;
+  Map<String, dynamic> _userData = {};
   int _selectedIndex = 2;
 
   @override
@@ -33,11 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
         .get();
 
     setState(() {
-      _userData = userData.data()!;
-      String imageUrl = _userData['imageUrl'] ?? '';
-      if (imageUrl.isNotEmpty) {
-        _image = File(imageUrl);
-      }
+      _userData = userData.data() ?? {};
     });
   }
 
@@ -73,16 +66,18 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
-                radius: 80,
-                backgroundColor: Colors.grey[300],
-                backgroundImage: _image != null ? FileImage(_image!) : null,
-                child: _image == null
-                    ? Icon(
-                        Icons.camera_alt,
-                        size: 40,
-                        color: Colors.grey[600],
-                      )
-                    : null,
+              radius: 80,
+              backgroundColor: Colors.grey[300],
+              child: ClipOval(
+                child: SizedBox(
+                  width: 180,
+                  height: 180,
+                  child: Image.network(
+                    _userData['imageUrl'] ?? 'https://w1.pngwing.com/pngs/132/484/png-transparent-circle-silhouette-avatar-user-upload-pixel-art-user-profile-document-black.png',
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              )
             ),
             SizedBox(height: 5),
             Text(

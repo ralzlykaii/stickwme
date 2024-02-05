@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:stickwmeapp/widgets/custom_nav.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
 import 'dart:math';
-import 'package:google_nav_bar/google_nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:stickwmeapp/screens/homescreen.dart';
 import 'package:stickwmeapp/widgets/custom_scaffold.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -14,6 +13,7 @@ class MakeProfile extends StatefulWidget {
 
 class _MakeProfileState extends State<MakeProfile> {
   File? _image;
+  String imageUrl = '';
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
 
@@ -21,11 +21,27 @@ class _MakeProfileState extends State<MakeProfile> {
     final picker = ImagePicker(); // get image from device gallery 
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path); //updates selected image file
+      });
+    }
+  }
+
+  Future uploadPhoto() async {
+    String fileName = _image!.path; //get file name 
+    Reference storageRef = FirebaseStorage.instance.ref().child(fileName); //create storage location using file name 
+     
+    UploadTask uploadTask = storageRef.putFile(_image!); 
+    await uploadTask;                                     //upload image to firebase and wait for completion
+
+    imageUrl = await storageRef.getDownloadURL(); //obtain download url 
+
     setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      }
+      imageUrl = imageUrl; //update state with download url 
     });
+
+    return imageUrl;
   }
 
   @override
@@ -38,39 +54,40 @@ class _MakeProfileState extends State<MakeProfile> {
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: getImage,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 80,
-                        backgroundColor: Colors.grey[300],
-                        backgroundImage: _image != null ? FileImage(_image!) : null,
-                        child: _image == null
-                            ? Icon(
-                                Icons.camera_alt,
-                                size: 40,
-                                color: Colors.grey[600],
-                              )
-                            : null,
+              children: <Widget> [
+                CircleAvatar(
+                  radius: 80,
+                  backgroundColor: Colors.grey[300],
+                  child: ClipOval(
+                    child: SizedBox(
+                      width: 180,
+                      height: 180,
+                      child: (_image != null)?Image.file(_image!, fit: BoxFit.fill)
+                      :Image.network(
+                        'https://w1.pngwing.com/pngs/132/484/png-transparent-circle-silhouette-avatar-user-upload-pixel-art-user-profile-document-black.png',
+                        fit: BoxFit.fill,
+                        )
                       ),
-                      Positioned(
-                        bottom: 0,
-                        child: _image == null 
-                        ? Text(
-                          'Add photo',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 30,
-                            fontFamily: 'BetterTogether',
-                            fontWeight: FontWeight.w400,
-                            ),
-                        ) 
-                        : Container(),
-                      )
-                    ],
+                    )
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    //add photo
+                    getImage();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: OvalBorder(),
+                    padding: EdgeInsets.all(15.0),
+                  ),
+                  child: Text(
+                    'Add a photo',
+                    style: TextStyle(
+                      fontSize: 37.0,
+                      fontFamily: 'BetterTogether',
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -140,14 +157,7 @@ class _MakeProfileState extends State<MakeProfile> {
     String lastName = _lastNameController.text.trim();
 
     //now uploads image to firebase storage and obtain a download url
-    String imageUrl = "";
-    if (_image != null) {
-      Reference storageRef = FirebaseStorage.instance.ref().child('profile_image/${user?.uid}');
-      UploadTask uploadTask = storageRef.putFile(_image!);
-      await uploadTask.whenComplete(() async {
-        imageUrl = await storageRef.getDownloadURL();
-      });
-    }
+    await uploadPhoto();
 
     //now save all user info to database
     //want to save under user collection

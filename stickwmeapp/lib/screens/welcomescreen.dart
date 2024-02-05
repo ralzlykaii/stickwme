@@ -14,7 +14,7 @@ class Welcome extends StatelessWidget {
             child: Container(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 300.0), //adjust space between 
+                  padding: const EdgeInsets.only(top: 150.0), //adjust space between 
                   child: Align(
                     alignment: Alignment.center,
                     child: Column(
@@ -35,9 +35,7 @@ class Welcome extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 20.0), //adjust the space between text and buttons
                         WelcomeButtons(),
-                        SizedBox(height: 20.0), //adjust the space between buttons
                       ],
                     ),
                   ),
